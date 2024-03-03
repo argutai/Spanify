@@ -21,6 +21,14 @@ export function configureApi(access_token) {
         },
         method: 'PUT'
     };
-    
-    return { options, pauseOptions, playOptions };
+
+    const seekOptions = {
+        url: 'https://api.spotify.com/v1/me/player/seek?position_ms=0',
+        headers: {
+          'Authorization': 'Bearer ' + access_token
+        },
+        method: 'PUT'
+      };
+
+    return { options, pauseOptions, playOptions, seekOptions };
 }

@@ -1,27 +1,36 @@
-export function fetchData(options) {
-
-    return new Promise((resolve, reject) => {
-      const requestOptions = {
-        method: options.method || 'GET',
-        headers: options.headers || {},
-        body: options.body || null
-      };
+export function generateColoredText(string, positions) {
+    let result = '';
+    for (let i = 0; i < string.length; i++) {
+        if (positions.includes(i)) {
+            result += `<span style="color: red;">${string[i]}</span>`;
+        } else {
+            result += `<span style="color: green;">${string[i]}</span>`;
+        }
+    }
+    return result;
+}
   
-      fetch(options.url, requestOptions)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Request failed with status ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          resolve(data);
-        })
-        .catch(error => {
-          if (error instanceof SyntaxError) {
-            console.error('SyntaxError: The string did not match the expected pattern');
-          }
-          reject(error); // Reject the promise with the error
-        });
-    });
-  }
+export function highlightDifferences(modelString, newString) {
+    const differences = [];
+    let modelIndex = 0;
+    let newIndex = 0;
+  
+    while (modelIndex < modelString.length || newIndex < newString.length) {
+        if (modelString[modelIndex] !== newString[newIndex]) {
+        differences.push(newIndex);
+  
+        if (modelString[modelIndex + 1] === newString[newIndex]) {
+            modelIndex++;
+        } else if (modelString[modelIndex] === newString[newIndex + 1]) {
+            newIndex++;
+        }
+        }
+        modelIndex++;
+        newIndex++;
+    }
+    return differences;
+}
+  
+  
+  
+  
