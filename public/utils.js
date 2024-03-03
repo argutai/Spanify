@@ -1,4 +1,4 @@
-export function fetchzData(options) {
+export function fetchData(options) {
 
     return new Promise((resolve, reject) => {
       const requestOptions = {

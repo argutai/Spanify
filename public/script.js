@@ -1,59 +1,14 @@
 // Get access token from URL
 var url = window.location.href;
 var params = new URLSearchParams(url.split('?')[1]);
-var access_token = params.get('access_token');
+export const access_token = params.get('access_token');
 
-function fetchData(options) {
-
-  return new Promise((resolve, reject) => {
-    const requestOptions = {
-      method: options.method || 'GET',
-      headers: options.headers || {},
-      body: options.body || null
-    };
-
-    fetch(options.url, requestOptions)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Request failed with status ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        resolve(data);
-      })
-      .catch(error => {
-        if (error instanceof SyntaxError) {
-          console.error('SyntaxError: The string did not match the expected pattern');
-        }
-        reject(error); // Reject the promise with the error
-      });
-  });
-}
-
-// Usage:
-const options = {
-  url: 'https://api.spotify.com/v1/me/player/currently-playing',
-  headers: {
-    'Authorization': 'Bearer ' + access_token
-  }
-};
-const pauseOptions = {
-  url: 'https://api.spotify.com/v1/me/player/pause',
-  headers: {
-    'Authorization': 'Bearer ' + access_token
-  },
-  method: 'PUT'
-};
-const playOptions = {
-  url: 'https://api.spotify.com/v1/me/player/play',
-  headers: {
-    'Authorization': 'Bearer ' + access_token
-  },
-  method: 'PUT'
-};
+import { fetchData } from './utils.js';
+import { configureApi } from './api-config.js';
+const { options, pauseOptions, playOptions } = configureApi(access_token);
 
 (async () => {
+  // Track info and Id
   const item = await fetchData(options);
   const trackId = item.item.id;
   
@@ -68,6 +23,7 @@ const playOptions = {
   const name = item.item.name;
   document.getElementById("TrackId").innerText = name;
 
+  // Lyrics
   const lyricsOptions = {
     url: 'http://127.0.0.1:8000/?trackid=' + trackId 
   };
@@ -88,10 +44,9 @@ const playOptions = {
     const currentStartTime = currentLine.startTimeMs;
     const nextStartTime = nextLine.startTimeMs;
 
-    // Display the words
     window.words = currentLine.words;
 
-    // Use AJAX to send the string to the server
+    // AJAX send string to server to Translate
     const xhr = new XMLHttpRequest();
     const url = '/translate'; // Replace with your server endpoint
     xhr.open('POST', url);
@@ -99,12 +54,9 @@ const playOptions = {
     xhr.onreadystatechange = function() {
       if (xhr.readyState === XMLHttpRequest.DONE) {
         if (xhr.status === 200) {
-          // Response received successfully
           const responseText = xhr.responseText;
           console.log('Response from server:', responseText);
-          // Do something with the response here
         } else {
-          // Handle error
           console.error('Error:', xhr.status);
         }
       }
@@ -119,7 +71,7 @@ const playOptions = {
     
     // Seek to the start time of the line
     seekToStartTime(currentStartTime);
-    period = nextStartTime - currentStartTime
+    var period = nextStartTime - currentStartTime
     setTimeout(() => {
       fetchData(pauseOptions)
     }, period);
@@ -168,7 +120,6 @@ const playOptions = {
   submitButton.addEventListener('click', function() {
     const userInput = translationInput.value;
     const differences = highlightDifferences(window.words, userInput)
-    // Do something with the user input, such as logging it to the console
     console.log('Differences:', differences);
 
   // Get the element where you want to display the colored text
