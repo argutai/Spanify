@@ -1,11 +1,9 @@
-import { fetchData, playLine, updateAnswer } from './playfunctions.js';
+import { fetchData, playLine, updateAnswer, showLine } from './playfunctions.js';
 import { configureApi } from './api-config.js';
 import { access_token } from './access_token.js';
 import { generateColoredText, highlightDifferences } from './utils.js';
-import { wordsElement, usersWordsElement, prevButton, replayButton, nextButton, translationInput, submitButton } from './elements.js';
+import { listeningCorrectionElement, listeningUserAttemptElement, prevButton, replayButton, nextButton, userAttemptInput, submitButton, listeningButton, readingButton } from './elements.js';
 const { options, pauseOptions, playOptions, seekOptions, lyricsOptions } = configureApi(access_token);
-let currentIndex = 0;
-
 
 (async () => {
   // Track info and Id
@@ -28,21 +26,29 @@ let currentIndex = 0;
     url: 'http://127.0.0.1:8000/?trackid=' + trackId 
   };
   const lyrics = await fetchData(lyricsOptions)
+  let currentIndex = 0;
+  
+  // Default exercise
+  let exercise = 'listening';
+  window.exercise = exercise
   
   function replayLine() {
     playLine(currentIndex, lyrics);
+    showLine()
   }
 
   function previousLine() {
     const prevIndex = (currentIndex - 1 + lyrics.lines.length) % lyrics.lines.length;
     playLine(prevIndex, lyrics);
     currentIndex = prevIndex;
+    showLine()
   }
 
   function nextLine() {
     const nextIndex = (currentIndex + 1) % lyrics.lines.length;
     playLine(nextIndex, lyrics);
     currentIndex = nextIndex;
+    showLine()
   }
 
   // Event listeners for buttons
@@ -52,8 +58,27 @@ let currentIndex = 0;
 
   // Initial display
   playLine(currentIndex, lyrics);
+  showLine()
 
-  updateAnswer(window.words)
-
+  updateAnswer()
+  
 })()
 
+
+listeningButton.addEventListener('click', () => {
+  if (exercise !== 'listening') {
+    window.exercise = 'listening';
+    listeningButton.classList.add('selected');
+    readingButton.classList.remove('selected');
+    showLine()
+  }
+});
+
+readingButton.addEventListener('click', () => {
+  if (exercise !== 'reading') {
+    window.exercise = 'reading';
+    readingButton.classList.add('selected');
+    listeningButton.classList.remove('selected');
+    showLine()
+  }
+});

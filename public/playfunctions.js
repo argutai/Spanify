@@ -1,5 +1,4 @@
-const wordsElement = document.getElementById('words');
-const usersWordsElement = document.getElementById('userswords');
+import { listeningCorrectionElement, readingPromptElement, listeningUserAttemptElement } from './elements.js';
 import { configureApi } from './api-config.js';
 import { access_token } from './access_token.js';
 import { generateColoredText, highlightDifferences } from './utils.js'
@@ -51,10 +50,6 @@ export function playLine(index, lyrics) {
     clearTimeout(pauseTimeout);
     pauseTimeout = null;
   }
-
-  // const questionMarksString = '?'.repeat(currentLine.words.length);
-  wordsElement.textContent = '';
-  usersWordsElement.innerHTML = '';
   
   // Seek to the start time of the line
   seekToStartTime(currentStartTime);
@@ -68,6 +63,22 @@ export function playLine(index, lyrics) {
   fetchData(playOptions);
 }
 
+export function showLine() {
+  // const questionMarksString = '_'.repeat(currentLine.words.length);
+  if (window.exercise === 'listening') {
+    listeningCorrectionElement.textContent = '';
+    listeningUserAttemptElement.innerHTML = '';
+    readingPromptElement.textContent = '';
+  } else if (window.exercise === 'reading') {
+    readingPromptElement.textContent = window.words;
+    listeningCorrectionElement.textContent = '';
+    listeningUserAttemptElement.innerHTML = '';
+  } else {
+    throw new Error('Execise not set')
+  }
+}
+
+
 export function seekToStartTime(startTime) {
   seekOptions.url = 'https://api.spotify.com/v1/me/player/seek?position_ms=' + startTime,
   fetchData(seekOptions);
@@ -75,7 +86,7 @@ export function seekToStartTime(startTime) {
 
 
 // AJAX send string to server to Translate
-function sendToTranslate(words) {
+function sendToTranslate(words, callback) {
   const xhr = new XMLHttpRequest();
   const url = '/translate'; 
   xhr.open('POST', url);
@@ -84,7 +95,9 @@ function sendToTranslate(words) {
     if (xhr.readyState === XMLHttpRequest.DONE) {
       if (xhr.status === 200) {
         const responseText = xhr.responseText;
-        console.log('Response from server:', responseText);
+        if (callback) {
+          callback(responseText); // Call the callback function with the responseText
+        }
       } else {
         console.error('Error:', xhr.status);
       }
@@ -93,17 +106,34 @@ function sendToTranslate(words) {
   xhr.send(JSON.stringify({ stringData: words }));
 }
 
-
-export function updateAnswer(words) {
-  submitButton.addEventListener('click', function() {
-    const userInput = translationInput.value;
-    const differences = highlightDifferences(words, userInput)
+export function multifuctionButton() {
+  if (window.exercise === 'listening') {
+    console.log("multifuctional button: " + window.exercise)
+    const userInput = userAttemptInput.value;
+    const differences = highlightDifferences(window.words, userInput)
     console.log('Differences:', differences);
   
-    // Generate the colored text and append it to the display element
-    wordsElement.textContent = window.words;
-    usersWordsElement.innerHTML = generateColoredText(userInput, differences);
+    listeningCorrectionElement.textContent = window.words;
+    listeningUserAttemptElement.innerHTML = generateColoredText(userInput, differences);
 
-    translationInput.value = '';
+    userAttemptInput.value = '';
+  } else if (window.exercise === 'reading') {
+    console.log("multifuctional button: " + window.exercise)
+    const userInput = userAttemptInput.value;
+
+    sendToTranslate(window.words, function(response) {
+      listeningCorrectionElement.textContent = response;
+    });
+
+    listeningUserAttemptElement.innerHTML = userInput;
+
+    userAttemptInput.value = '';
+  }
+}
+
+
+export function updateAnswer() {
+  submitButton.addEventListener('click', function() {
+    multifuctionButton()
   });
 }

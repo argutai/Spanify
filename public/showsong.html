@@ -29,7 +29,7 @@
     }
 
     .button {
-      background-color: #3498db; /* Blue */
+      background-color: rgb(119, 156, 181); /* Blue */
       border: none;
       color: white;
       padding: 8px 16px;
@@ -43,6 +43,10 @@
       width: 90px; /* Smaller width for buttons */
     }
 
+    .selected {
+      background-color: #1abc9c; /* Green */
+    }
+
     #replayButton {
       font-size: 16px; /* Smaller font size for replay button */
     }
@@ -51,7 +55,7 @@
       margin-top: 20px;
     }
 
-    #translationInput {
+    #userAttemptInput {
       margin-top: 10px;
       margin-bottom: 15px; /* Increased space between input and userswords */
       padding: 10px;
@@ -87,9 +91,17 @@
       border-radius: 10px; /* Rounded corners for image */
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow effect */
     }
+
+    #exerciseButtons {
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
+  <div id="exerciseButtons">
+    <button id="listeningButton" class="button selected">Listening</button>
+    <button id="readingButton" class="button">Reading</button>
+  </div>
   <h1><span id="TrackId">Show Song</span></h1>
   <div id="imageContainer">
     <!-- Image will be dynamically added here -->
@@ -98,17 +110,19 @@
   <button id="replayButton" class="button">⟲</button>
   <button id="nextButton" class="button">►</button>
   <div id="lyricsContainer">
+    <p id="readingPrompt"></p>
     <div>
-      <input type="text" id="translationInput" placeholder="Type what you hear">
+      <input type="text" id="userAttemptInput" placeholder="Type what you hear">
       <input type="submit" id="submitButton" value="Submit">
     </div>
     <br>
-    <p id="userswords">User Words</p>
-    <p id="words">Words</p>
+    <p id="listeningUserAttempt"></p>
+    <p id="listeningCorrection"></p>
   </div>
-  <script type="module" src="listening.js"></script>
+  <script type="module" src="script.js"></script>
   <script type="module" src="utils.js"></script>
   <script type="module" src="api-config.js"></script>
-  </body>
+  <script type="module" src="playfunctions.js"></script>
+</body>
 </html>
 

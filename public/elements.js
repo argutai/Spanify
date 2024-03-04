@@ -1,7 +1,10 @@
-export const wordsElement = document.getElementById('words');
-export const usersWordsElement = document.getElementById('userswords');
+export const listeningCorrectionElement = document.getElementById('listeningCorrection');
+export const listeningUserAttemptElement = document.getElementById('listeningUserAttempt');
+export const readingPromptElement = document.getElementById('readingPrompt');
 export const prevButton = document.getElementById('prevButton');
 export const replayButton = document.getElementById('replayButton');
 export const nextButton = document.getElementById('nextButton');
-export const translationInput = document.getElementById('translationInput');
+export const userAttemptInput = document.getElementById('userAttemptInput');
 export const submitButton = document.getElementById('submitButton');
+export const listeningButton = document.getElementById('listeningButton');
+export const readingButton = document.getElementById('readingButton');
