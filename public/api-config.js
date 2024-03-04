@@ -30,5 +30,8 @@ export function configureApi(access_token) {
         method: 'PUT'
       };
 
-    return { options, pauseOptions, playOptions, seekOptions };
+      const lyricsOptions = {
+        url: 'http://127.0.0.1:8000/?trackid='
+      };
+    return { options, pauseOptions, playOptions, seekOptions, lyricsOptions };
 }

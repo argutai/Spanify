@@ -2,8 +2,8 @@ import { fetchData, playLine, updateAnswer } from './playfunctions.js';
 import { configureApi } from './api-config.js';
 import { access_token } from './access_token.js';
 import { generateColoredText, highlightDifferences } from './utils.js';
-import { wordsElement, displayElement, prevButton, replayButton, nextButton, translationInput, submitButton } from './elements.js';
-const { options, pauseOptions, playOptions, seekOptions } = configureApi(access_token);
+import { wordsElement, usersWordsElement, prevButton, replayButton, nextButton, translationInput, submitButton } from './elements.js';
+const { options, pauseOptions, playOptions, seekOptions, lyricsOptions } = configureApi(access_token);
 let currentIndex = 0;
 
 

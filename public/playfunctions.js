@@ -1,5 +1,5 @@
 const wordsElement = document.getElementById('words');
-const displayElement = document.getElementById('userswords');
+const usersWordsElement = document.getElementById('userswords');
 import { configureApi } from './api-config.js';
 import { access_token } from './access_token.js';
 import { generateColoredText, highlightDifferences } from './utils.js'
@@ -36,28 +36,35 @@ export function fetchData(options) {
 
 
 
+let pauseTimeout = null; // Variable to store the timeout ID
+
 export function playLine(index, lyrics) {
   const currentLine = lyrics.lines[index];
   const nextIndex = (index + 1) % lyrics.lines.length;
   const nextLine = lyrics.lines[nextIndex];
-  
   const currentStartTime = currentLine.startTimeMs;
   const nextStartTime = nextLine.startTimeMs;
-
   window.words = currentLine.words;
 
-  sendToTranslate(window.words)
+  // Clear any existing timeout
+  if (pauseTimeout !== null) {
+    clearTimeout(pauseTimeout);
+    pauseTimeout = null;
+  }
 
   // const questionMarksString = '?'.repeat(currentLine.words.length);
   wordsElement.textContent = '';
-  displayElement.innerHTML = '';
+  usersWordsElement.innerHTML = '';
   
   // Seek to the start time of the line
   seekToStartTime(currentStartTime);
-  var period = nextStartTime - currentStartTime
-  setTimeout(() => {
-    fetchData(pauseOptions)
-  }, period);
+
+  // Schedule the pause action after the specified period
+  pauseTimeout = setTimeout(() => {
+    fetchData(pauseOptions);
+    pauseTimeout = null; // Reset the timeout ID after execution
+  }, nextStartTime - currentStartTime);
+
   fetchData(playOptions);
 }
 
@@ -67,8 +74,8 @@ export function seekToStartTime(startTime) {
 }
 
 
+// AJAX send string to server to Translate
 function sendToTranslate(words) {
-  // AJAX send string to server to Translate
   const xhr = new XMLHttpRequest();
   const url = '/translate'; 
   xhr.open('POST', url);
@@ -94,8 +101,8 @@ export function updateAnswer(words) {
     console.log('Differences:', differences);
   
     // Generate the colored text and append it to the display element
-    displayElement.innerHTML = generateColoredText(userInput, differences);
     wordsElement.textContent = window.words;
+    usersWordsElement.innerHTML = generateColoredText(userInput, differences);
 
     translationInput.value = '';
   });
