@@ -131,9 +131,10 @@ export function multifuctionButton() {
   }
 }
 
-
 export function updateAnswer() {
-  submitButton.addEventListener('click', function() {
-    multifuctionButton()
+  userAttemptInput.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+      multifuctionButton();
+    }
   });
 }
