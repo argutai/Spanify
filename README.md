@@ -11,7 +11,7 @@ I run this locally for my own learning rather than deploying because it is likel
 
 ### Deploy Spotify Lyrics API
 
-This app relies on first deploying the Spotify Lyrics API, following [this page](https://github.com/akashrchandran/spotify-lyrics-api). It requires that you obtain a private session cookie, the process is described [here](https://github.com/akashrchandran/syrics/wiki/Finding-sp_dc). Run using
+This app relies on first deploying the Spotify Lyrics API, following [this page](https://github.com/akashrchandran/spotify-lyrics-api). It requires that you obtain a private session cookie from open.spotify, the process is described [here](https://github.com/akashrchandran/syrics/wiki/Finding-sp_dc).
 
 Alternatively, you can host it as a Docker container using the docker image I created for the php app:
 
