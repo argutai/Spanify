@@ -23,7 +23,7 @@ const { options, pauseOptions, playOptions, seekOptions, lyricsOptions } = confi
 
   // Lyrics
   const lyricsOptions = {
-    url: 'http://127.0.0.1:8000/?trackid=' + trackId 
+    url: 'http://localhost:8000/?trackid=' + trackId 
   };
   const lyrics = await fetchData(lyricsOptions)
   let currentIndex = 0;
@@ -64,10 +64,12 @@ const { options, pauseOptions, playOptions, seekOptions, lyricsOptions } = confi
   
 })()
 
+var input = document.getElementById('userAttemptInput');
 
 listeningButton.addEventListener('click', () => {
-  if (exercise !== 'listening') {
+  if (window.exercise !== 'listening') {
     window.exercise = 'listening';
+    input.placeholder = 'Type what you hear';
     listeningButton.classList.add('selected');
     readingButton.classList.remove('selected');
     showLine()
@@ -75,8 +77,9 @@ listeningButton.addEventListener('click', () => {
 });
 
 readingButton.addEventListener('click', () => {
-  if (exercise !== 'reading') {
+  if (window.exercise !== 'reading') {
     window.exercise = 'reading';
+    input.placeholder = 'Type your translation';
     readingButton.classList.add('selected');
     listeningButton.classList.remove('selected');
     showLine()
