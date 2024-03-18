@@ -9,8 +9,8 @@ const { translate } = require('google-translate-api-browser');
 const bodyParser = require('body-parser');
 
 
-var client_id = 'e88e5f365698423598e4e524617194df'; // your clientId
-var client_secret = '3c865b8b37394b6188841968a6ccd383'; // Your secret
+var client_id = process.env.client_id;
+var client_secret = process.env.client_secret;
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
 
@@ -56,9 +56,6 @@ app.get('/showsong', function(req, res) {
 
 app.get('/callback', function(req, res) {
 
-  // your application requests refresh and access tokens
-  // after checking the state parameter
-
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -99,22 +96,6 @@ app.get('/callback', function(req, res) {
       });
     }
 
-    // async function spotifyApi(options) {
-    //   return new Promise((resolve, reject) => {
-    //       request.get(options, function(error, response, body) {
-    //           if (error) {
-    //               reject(error);
-    //           } else {
-    //               try {
-    //                   resolve(body);
-    //               } catch (parseError) {
-    //                   reject(parseError);
-    //               }
-    //           }
-    //       });
-    //   });
-    // }
-
     (async () => {
 
       // Get Access token
@@ -123,24 +104,6 @@ app.get('/callback', function(req, res) {
       const refresh_token = tokens.refresh_token;
 
       res.redirect('/showsong?access_token=' + access_token);
-
-      // // Get Track ID
-      // var spotifyApiOptions = {
-      //   url: 'https://api.spotify.com/v1/me/player/currently-playing',
-      //   headers: { 'Authorization': 'Bearer ' + access_token },
-      //   json: true
-      // };
-      
-      // // Get Lyrics
-      // const itemId = await spotifyApi(spotifyApiOptions); // Add error handling & logging here for is Spotify is not playing
-      // // console.log(itemId)
-      // const trackId = itemId.item.id
-      // const lyrics = await spotifyApi({
-      //   url: 'http://127.0.0.1:8000/?trackid=' + trackId,
-      //   json: true
-      // });
-      
-      // console.log("Lyrics:", lyrics);
 
     })();
   }
@@ -156,7 +119,7 @@ app.post('/translate', async (req, res) => {
     res.send(translation.text); // Send the translated text to the client
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error translating string'); // Send an error response to the client
+    res.status(500).send('Error translating string');
   }
 });
 
