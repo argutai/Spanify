@@ -31,7 +31,7 @@ export function configureApi(access_token) {
       };
 
       const lyricsOptions = {
-        url: 'http://127.0.0.1:8000/?trackid='
+        url: 'http://localhost:8000'
       };
     return { options, pauseOptions, playOptions, seekOptions, lyricsOptions };
 }
