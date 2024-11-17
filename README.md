@@ -7,8 +7,6 @@ This is an app to help language learning by listening to translating songs line 
 
 It makes use of the Spotify API, the [Google translate API](https://github.com/cjvnjde/google-translate-api-browser), and a [Spotify Lyrics API](https://github.com/akashrchandran/spotify-lyrics-api) created by akashrchandran.
 
-I run this locally for my own learning rather than deploying because it is likely against Spotify’s terms of service and because the Spotify Lyrics API requires a private session cookie which users must collect themselves from [open.spotify.com](http://open.spotify.com). Due to this, I chose to use the simpler authorization code flow to handle client_secret and client_id, rather than with PKCE.
-
 ### Deploy Spotify Lyrics API
 
 This app relies on first deploying the Spotify Lyrics API, following [this page](https://github.com/akashrchandran/spotify-lyrics-api). It requires that you obtain a private session cookie from open.spotify, the process is described [here](https://github.com/akashrchandran/syrics/wiki/Finding-sp_dc).
